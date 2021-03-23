@@ -10,15 +10,16 @@ export class DndHandleDirective {
   @HostBinding( "attr.draggable" )
   draggable = true;
 
-  constructor( parent:DndDraggableDirective ) {
-
+  constructor( private parent:DndDraggableDirective ) {
+    parent.draggable = false;
     parent.registerDragHandle( this );
   }
 
   @HostListener( "dragstart", [ "$event" ] )
   @HostListener( "dragend", [ "$event" ] )
   onDragEvent( event:DndEvent ) {
-
+    if (event.type === 'dragstart') this.parent.draggable = true;
     event._dndUsingHandle = true;
+    if (event.type === 'dragend') this.parent.draggable = false;   
   }
 }
